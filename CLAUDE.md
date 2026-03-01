@@ -1,139 +1,149 @@
 
-# CLAUDE.md — Go Best Practices
+# CLAUDE.md — Rust Best Practices
 
 ## Code Style
 
-- We are building a golang cli project that is going to be distributed on npm.
-- We are using go version 1.26.0
-- Write idiomatic Go — prefer simplicity over cleverness
-- No global state; pass dependencies explicitly
-- Return errors, don't panic (except truly unrecoverable cases)
-- Keep functions short (~20-40 lines max); extract when complexity grows
-- Accept interfaces, return structs
-- Define interfaces where they're used, not where implemented
-- Keep interfaces small (1-3 methods)
+- We are building a Rust CLI project that will be distributed on npm.
+- We are using Rust version 1.93.1 (Feb. 12, 2026)
+- Write idiomatic Rust — prefer clarity over cleverness.
+- No global mutable state; pass dependencies explicitly.
+- Use `Result<T, E>` for fallible operations — avoid `.unwrap()` in library/production code.
+- Keep functions short (~20-40 lines max); extract when complexity grows.
+- Prefer traits for abstraction; define traits where they're used.
+- Keep traits small and focused (1-3 methods).
 
 ## Naming
 
-- Use short, clear names: `cfg` not `configuration`, `buf` not `buffer`
-- Avoid stuttering: `parser.Parser` → `parser.Instance`
-- Acronyms in caps: `ID`, `URL`, `AST`; mixed case: `userID`, `httpClient`
+- Use `snake_case` for functions, methods, variables, and modules.
+- Use `CamelCase` for types, traits, and enums.
+- Use `SCREAMING_SNAKE_CASE` for constants.
+- Short, clear names: `cfg` not `configuration`, `buf` not `buffer`.
+- Avoid stuttering: `parser::Parser` → `parser::Instance`.
+- Acronyms follow Rust conventions: `Id`, `Url`, `Ast` in CamelCase; `id`, `url`, `ast` in snake_case.
 
 ## Error Handling
 
-```go
-// Always wrap errors with context
-if err != nil {
-    return fmt.Errorf("doing X: %w", err)
+```rust
+// Use thiserror for library errors
+#[derive(Debug, thiserror::Error)]
+pub enum GroveError {
+    #[error("parsing {path}: {source}")]
+    Parse { path: PathBuf, source: oxc::diagnostics::Error },
+
+    #[error("reading {path}: {source}")]
+    Io { path: PathBuf, source: std::io::Error },
+
+    #[error("config not found: {0}")]
+    ConfigNotFound(PathBuf),
 }
 
-// Define sentinel errors for expected conditions
-var ErrNotFound = errors.New("not found")
+// Use anyhow for application-level (CLI) errors
+fn main() -> anyhow::Result<()> {
+    // ...
+}
 
-// Check with errors.Is/As
-if errors.Is(err, ErrNotFound) { ... }
+// Always add context when propagating
+let content = std::fs::read_to_string(&path)
+    .with_context(|| format!("reading {}", path.display()))?;
 ```
 
 ## Struct Design
 
-```go
-// Use functional options for flexible configuration
-type Option func(*Service)
-
-func WithLogger(l *slog.Logger) Option {
-    return func(s *Service) { s.logger = l }
+```rust
+// Use the builder pattern for flexible configuration
+pub struct Config {
+    entry: Vec<String>,
+    ignore: Vec<String>,
+    concurrency: usize,
 }
 
-func New(opts ...Option) *Service {
-    s := &Service{logger: slog.Default()}
-    for _, opt := range opts {
-        opt(s)
+impl Config {
+    pub fn builder() -> ConfigBuilder {
+        ConfigBuilder::default()
     }
-    return s
+}
+
+#[derive(Default)]
+pub struct ConfigBuilder { /* ... */ }
+
+impl ConfigBuilder {
+    pub fn entry(mut self, e: impl Into<String>) -> Self {
+        self.entry.push(e.into());
+        self
+    }
+    pub fn build(self) -> Config { /* ... */ }
 }
 ```
 
 ## Concurrency
 
-- Use `errgroup.Group` for parallel tasks with error propagation
-- Limit concurrency with semaphores for I/O-bound work
-- Prefer channels for communication, mutexes for state protection
-- Always propagate and check `context.Context`
+- Use `rayon` for CPU-bound parallel iteration (file parsing).
+- Use scoped threads or `rayon::scope` instead of spawning raw threads.
+- Prefer `crossbeam` channels over `std::sync::mpsc` when needed.
+- Avoid shared mutable state; prefer message passing or `DashMap` when necessary.
 
-```go
-g, ctx := errgroup.WithContext(ctx)
-sem := make(chan struct{}, runtime.NumCPU())
+```rust
+use rayon::prelude::*;
 
-for _, item := range items {
-    item := item
-    g.Go(func() error {
-        sem <- struct{}{}
-        defer func() { <-sem }()
-        return process(ctx, item)
-    })
-}
-return g.Wait()
+let results: Vec<ParseResult> = file_paths
+    .par_iter()
+    .map(|path| parse_file(path))
+    .collect::<Result<Vec<_>, _>>()?;
 ```
 
 ## Performance
 
-- Profile before optimizing: `go test -bench=. -cpuprofile=cpu.out`
-- Preallocate slices: `make([]T, 0, expectedLen)`
-- Use `sync.Pool` for frequently allocated objects
-- Stream large data; avoid loading entirely into memory
-- Reuse buffers; avoid allocations in hot paths
-- Use `strings.Builder` for string concatenation
+- Profile before optimizing: `cargo bench`, `cargo flamegraph`.
+- Preallocate collections: `Vec::with_capacity(expected_len)`.
+- Use `&str` and borrows over cloning where possible.
+- Stream large data; avoid loading entirely into memory.
+- Reuse buffers; avoid allocations in hot paths.
+- Use `String::with_capacity` for string building.
 
 ## Testing
 
-- Table-driven tests for multiple cases
-- Use `t.Parallel()` where safe
-- Test public API primarily
-- Use `testdata/` for fixtures
+- Use `#[cfg(test)]` modules for unit tests.
+- Use integration tests in `tests/` directory.
+- Test public API primarily.
+- Use `testdata/` or fixtures in `tests/fixtures/` for test projects.
 
-```go
-func TestFoo(t *testing.T) {
-    t.Parallel()
-    tests := []struct {
-        name    string
-        input   string
-        want    string
-        wantErr bool
-    }{
-        {"valid", "input", "expected", false},
-        {"error case", "bad", "", true},
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_esm_imports() {
+        let source = r#"import { foo } from "./bar";"#;
+        let result = parse(source, "test.ts").unwrap();
+        assert_eq!(result.imports.len(), 1);
+        assert_eq!(result.imports[0].specifier, "./bar");
     }
-    for _, tt := range tests {
-        t.Run(tt.name, func(t *testing.T) {
-            t.Parallel()
-            got, err := Foo(tt.input)
-            if (err != nil) != tt.wantErr {
-                t.Fatalf("error = %v, wantErr = %v", err, tt.wantErr)
-            }
-            if got != tt.want {
-                t.Errorf("got %q, want %q", got, tt.want)
-            }
-        })
+
+    #[test]
+    fn test_parse_error() {
+        let source = "import {";
+        let result = parse(source, "test.ts");
+        assert!(result.is_err());
     }
 }
 ```
 
 ## Logging
 
-- Use `log/slog` for structured logging
-- Debug for verbose, Info for user-facing
+- Use `tracing` for structured, leveled logging.
+- Debug for verbose, Info for user-facing.
 
-```go
-slog.Debug("processing", "key", value)
-slog.Error("failed", "err", err)
+```rust
+tracing::debug!(key = %value, "processing");
+tracing::error!(?err, "failed");
 ```
 
 ## Avoid
 
-- `init()` for setup — use explicit initialization
-- Returning `interface{}` or `any` — define concrete types
-- Ignoring context cancellation
-- `ioutil` (deprecated) — use `os` and `io`
-- Shadowing `err` in nested scopes
-- Ignoring errors from `Close()` on writers
-- Bare `panic` for error handling
+- `.unwrap()` / `.expect()` in production code — use `?` operator.
+- `unsafe` blocks unless absolutely necessary and well-documented.
+- Returning `Box<dyn Any>` — define concrete types.
+- Ignoring `Result` values — always handle or explicitly discard with `let _ =`.
+- Deep nesting — use early returns and `?` to flatten logic.
+- `clone()` when a borrow would suffice.

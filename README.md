@@ -1,28 +1,23 @@
-# 🌲 grove
+# grove
 
 ----- WIP -----
 
 > Inspect your dependency tree. Cut the dead wood.
 
 Grove is a fast static analysis tool for JavaScript, TypeScript, and Node.js projects.
-It detects unused exports, dead code, duplicate dependencies, and circular dependency 
-chains — powered by Go, built for modern JS/TS codebases.
+It detects unused exports, dead code, duplicate dependencies, and circular dependency
+chains — powered by Rust, built for modern JS/TS codebases.
 
 ## Features
 
-- 🍂 Unused exports and dead code detection
-- 🔁 Circular dependency detection
-- 📦 Duplicate and redundant dependency analysis
-- ⚡ Fast — built in Go
-- 🔧 Zero config to get started, fully configurable when you need it
-- 🗂️ Supports JavaScript, TypeScript, JSX, TSX, Node.js, and React projects
+- Unused exports and dead code detection
+- Circular dependency detection
+- Duplicate and redundant dependency analysis
+- Fast — built in Rust with oxc parser
+- Zero config to get started, fully configurable when you need it
+- Supports JavaScript, TypeScript, JSX, TSX, Node.js, and React projects
 
 ## Installation
-```bash
-go install github.com/giancarlosisasi/grove@latest
-```
-
-Or via npm (standalone binary):
 ```bash
 npm install -g @giancarlosio/grove
 ```
