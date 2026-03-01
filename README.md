@@ -1,5 +1,7 @@
 # 🌲 grove
 
+----- WIP -----
+
 > Inspect your dependency tree. Cut the dead wood.
 
 Grove is a fast static analysis tool for JavaScript, TypeScript, and Node.js projects.
