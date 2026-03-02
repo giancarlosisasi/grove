@@ -5,3 +5,8 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.5.60", features = ["derive"] }
+oxc_allocator = "0.115.0"
+oxc_ast = "0.115.0"
+oxc_ast_visit = "0.115.0"
+oxc_parser = "0.115.0"
+oxc_span = "0.115.0"

@@ -26,7 +26,7 @@ I am a Rust learning coach for Giancarlos. My purpose is to guide him step-by-st
 
 ### Phase 1: Foundation
 - [x] Task 1.1: CLI skeleton with clap (subcommands: circular, unused)
-- [ ] Task 1.2: JS/TS parser wrapper — extract imports from a single file (oxc_parser)
+- [x] Task 1.2: JS/TS parser wrapper — extract imports from a single file (oxc_parser)
 - [ ] Task 1.3: Module resolver wrapper — resolve import specifiers to file paths (oxc_resolver)
 - [ ] Task 1.4: File scanner — walk directories, respect .gitignore (ignore crate)
 
@@ -53,9 +53,9 @@ I am a Rust learning coach for Giancarlos. My purpose is to guide him step-by-st
 
 ## Current Status
 - **Session:** 1
-- **Current Task:** Task 1.2 — JS/TS parser wrapper (oxc_parser)
+- **Current Task:** Task 1.3 — Module resolver wrapper (oxc_resolver)
 - **Branch:** mvp
-- **What exists:** main.rs with match on commands, lib.rs with Cli struct + Commands enum, Cargo.toml with clap
+- **What exists:** main.rs (CLI entry), lib.rs (Cli struct + Commands enum), parser.rs (ImportFinder visitor, parses all 4 import types)
 
 ## Rust Concepts Tracker
 Every concept introduced gets explained and checked off.
@@ -72,42 +72,42 @@ Every concept introduced gets explained and checked off.
 - [x] `fn` — how to define functions
 - [x] `let` / `let mut` — variable bindings (immutable by default!)
 - [x] `pub` — visibility modifier (everything is private by default)
-- [ ] `mod` — module system (how files/folders become modules)
+- [x] `mod` — module system (how files/folders become modules)
 - [x] `use` — importing items from other modules/crates
 - [x] Type annotations — `x: String`, `y: bool`, etc.
 
 ### Ownership & Borrowing (Rust's unique feature)
 - [ ] Ownership — every value has exactly one owner
-- [ ] Borrowing — `&x` (shared ref) vs `&mut x` (exclusive ref)
-- [ ] Lifetimes — how Rust tracks how long references are valid
+- [x] Borrowing — `&x` (shared ref) vs `&mut x` (exclusive ref)
+- [x] Lifetimes — how Rust tracks how long references are valid (intro level)
 - [ ] Clone vs Copy — duplicating values
-- [ ] `String` vs `&str` — owned string vs borrowed string slice
+- [x] `String` vs `&str` — owned string vs borrowed string slice
 
 ### Error Handling
 - [ ] `Result<T, E>` — function that can succeed (Ok) or fail (Err)
-- [ ] `Option<T>` — value that might exist (Some) or not (None)
+- [x] `Option<T>` — value that might exist (Some) or not (None)
 - [ ] `?` operator — early return on error (like try/catch shorthand)
 - [ ] `unwrap()` — get the value or panic (avoid in production!)
 - [ ] `thiserror` — derive macro for custom error types
 - [ ] `anyhow` — flexible error handling for applications
 
 ### Traits & Generics
-- [ ] Traits — like TS interfaces, define shared behavior
-- [ ] `impl` blocks — how you add methods to structs/enums
+- [x] Traits — like TS interfaces, define shared behavior
+- [x] `impl` blocks — how you add methods to structs/enums
 - [x] `#[derive(...)]` — auto-implement common traits
 - [ ] Generics — `<T>` type parameters
 - [ ] `impl Into<String>` — accepting multiple types that convert to String
 
 ### Collections & Iterators
-- [ ] `Vec<T>` — growable array (like JS Array)
+- [x] `Vec<T>` — growable array (like JS Array)
 - [ ] `HashMap<K, V>` — key-value map (like JS Map/Object)
 - [ ] `HashSet<T>` — unique values (like JS Set)
 - [ ] Iterators — `.iter()`, `.map()`, `.filter()`, `.collect()`
-- [ ] `for` loops — iterating over collections
+- [x] `for` loops — iterating over collections
 
 ### Pattern Matching
 - [x] `match` — exhaustive pattern matching (like switch but way more powerful)
-- [ ] `if let` — match a single pattern
+- [x] `if let` — match a single pattern
 - [ ] Destructuring — pulling values out of structs/enums/tuples
 
 ### Concurrency
@@ -123,9 +123,9 @@ Every concept introduced gets explained and checked off.
 - [ ] Process exit codes — `std::process::exit()`
 
 ### Testing
-- [ ] `#[test]` — marking test functions
-- [ ] `#[cfg(test)]` — conditional compilation for test modules
-- [ ] `assert!`, `assert_eq!` — test assertions
+- [x] `#[test]` — marking test functions
+- [x] `#[cfg(test)]` — conditional compilation for test modules
+- [x] `assert!`, `assert_eq!` — test assertions
 - [ ] Integration tests in `tests/` directory
 - [ ] Test fixtures
 

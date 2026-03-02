@@ -1,5 +1,7 @@
 use clap::{Parser, Subcommand};
 
+mod parser;
+
 #[derive(Parser)]
 #[command(
     version,
