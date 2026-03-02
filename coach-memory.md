@@ -27,7 +27,7 @@ I am a Rust learning coach for Giancarlos. My purpose is to guide him step-by-st
 ### Phase 1: Foundation
 - [x] Task 1.1: CLI skeleton with clap (subcommands: circular, unused)
 - [x] Task 1.2: JS/TS parser wrapper — extract imports from a single file (oxc_parser)
-- [ ] Task 1.3: Module resolver wrapper — resolve import specifiers to file paths (oxc_resolver)
+- [x] Task 1.3: Module resolver wrapper — resolve import specifiers to file paths (oxc_resolver)
 - [ ] Task 1.4: File scanner — walk directories, respect .gitignore (ignore crate)
 
 ### Phase 2: Circular Dependency Detection (first complete feature)
@@ -53,9 +53,9 @@ I am a Rust learning coach for Giancarlos. My purpose is to guide him step-by-st
 
 ## Current Status
 - **Session:** 1
-- **Current Task:** Task 1.3 — Module resolver wrapper (oxc_resolver)
+- **Current Task:** Task 1.4 — File scanner (ignore crate)
 - **Branch:** mvp
-- **What exists:** main.rs (CLI entry), lib.rs (Cli struct + Commands enum), parser.rs (ImportFinder visitor, parses all 4 import types)
+- **What exists:** main.rs (CLI entry), lib.rs (Cli + Commands + mod declarations), parser.rs (ImportFinder visitor, 4 import types), resolver.rs (create_resolver + resolve with oxc_resolver), tests/fixtures/resolver/ (test .ts files)
 
 ## Rust Concepts Tracker
 Every concept introduced gets explained and checked off.
@@ -84,10 +84,10 @@ Every concept introduced gets explained and checked off.
 - [x] `String` vs `&str` — owned string vs borrowed string slice
 
 ### Error Handling
-- [ ] `Result<T, E>` — function that can succeed (Ok) or fail (Err)
+- [x] `Result<T, E>` — function that can succeed (Ok) or fail (Err)
 - [x] `Option<T>` — value that might exist (Some) or not (None)
-- [ ] `?` operator — early return on error (like try/catch shorthand)
-- [ ] `unwrap()` — get the value or panic (avoid in production!)
+- [x] `?` operator — early return on error (like try/catch shorthand)
+- [x] `unwrap()` — get the value or panic (avoid in production!)
 - [ ] `thiserror` — derive macro for custom error types
 - [ ] `anyhow` — flexible error handling for applications
 
@@ -118,7 +118,7 @@ Every concept introduced gets explained and checked off.
 ### CLI & I/O
 - [x] `clap` derive macros — `#[derive(Parser)]`, `#[derive(Subcommand)]`
 - [ ] `std::fs` — file system operations
-- [ ] `std::path::PathBuf` — cross-platform file paths
+- [x] `std::path::PathBuf` — cross-platform file paths
 - [ ] `println!` / `eprintln!` — macros for stdout/stderr
 - [ ] Process exit codes — `std::process::exit()`
 
@@ -127,7 +127,7 @@ Every concept introduced gets explained and checked off.
 - [x] `#[cfg(test)]` — conditional compilation for test modules
 - [x] `assert!`, `assert_eq!` — test assertions
 - [ ] Integration tests in `tests/` directory
-- [ ] Test fixtures
+- [x] Test fixtures
 
 ### Advanced (later phases)
 - [ ] Closures — anonymous functions `|x| x + 1`
