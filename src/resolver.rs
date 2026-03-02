@@ -17,6 +17,8 @@ pub fn create_resolver() -> Resolver {
             ".jsx".into(),
             ".mjs".into(),
             ".json".into(),
+            ".mts".into(),
+            ".cts".into(),
         ],
         ..ResolveOptions::default()
     };

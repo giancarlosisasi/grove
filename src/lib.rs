@@ -2,6 +2,7 @@ use clap::{Parser, Subcommand};
 
 mod parser;
 mod resolver;
+mod scanner;
 
 #[derive(Parser)]
 #[command(

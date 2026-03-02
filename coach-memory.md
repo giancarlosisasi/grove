@@ -28,7 +28,7 @@ I am a Rust learning coach for Giancarlos. My purpose is to guide him step-by-st
 - [x] Task 1.1: CLI skeleton with clap (subcommands: circular, unused)
 - [x] Task 1.2: JS/TS parser wrapper — extract imports from a single file (oxc_parser)
 - [x] Task 1.3: Module resolver wrapper — resolve import specifiers to file paths (oxc_resolver)
-- [ ] Task 1.4: File scanner — walk directories, respect .gitignore (ignore crate)
+- [x] Task 1.4: File scanner — walk directories, respect .gitignore (ignore crate)
 
 ### Phase 2: Circular Dependency Detection (first complete feature)
 - [ ] Task 2.1: Dependency graph data structure
@@ -53,9 +53,10 @@ I am a Rust learning coach for Giancarlos. My purpose is to guide him step-by-st
 
 ## Current Status
 - **Session:** 1
-- **Current Task:** Task 1.4 — File scanner (ignore crate)
+- **Current Task:** Task 2.1 — Dependency graph data structure
 - **Branch:** mvp
-- **What exists:** main.rs (CLI entry), lib.rs (Cli + Commands + mod declarations), parser.rs (ImportFinder visitor, 4 import types), resolver.rs (create_resolver + resolve with oxc_resolver), tests/fixtures/resolver/ (test .ts files)
+- **Phase 1 COMPLETE**
+- **What exists:** main.rs (CLI entry), lib.rs (Cli + Commands + mod declarations), parser.rs (ImportFinder visitor, 4 import types), resolver.rs (create_resolver + resolve), scanner.rs (walk dir, filter JS/TS extensions), tests/fixtures/ (resolver + scanner fixtures), 6 passing tests
 
 ## Rust Concepts Tracker
 Every concept introduced gets explained and checked off.
@@ -102,7 +103,7 @@ Every concept introduced gets explained and checked off.
 - [x] `Vec<T>` — growable array (like JS Array)
 - [ ] `HashMap<K, V>` — key-value map (like JS Map/Object)
 - [ ] `HashSet<T>` — unique values (like JS Set)
-- [ ] Iterators — `.iter()`, `.map()`, `.filter()`, `.collect()`
+- [x] Iterators — `.iter()`, `.map()`, `.filter()`, `.collect()`
 - [x] `for` loops — iterating over collections
 
 ### Pattern Matching
@@ -130,7 +131,7 @@ Every concept introduced gets explained and checked off.
 - [x] Test fixtures
 
 ### Advanced (later phases)
-- [ ] Closures — anonymous functions `|x| x + 1`
+- [x] Closures — anonymous functions `|x| x + 1`
 - [ ] `serde` — serialization/deserialization (for JSON)
 - [ ] Trait objects — `Box<dyn Trait>` for dynamic dispatch
 - [ ] `impl Trait` in return position
